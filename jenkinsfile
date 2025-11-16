@@ -2,21 +2,21 @@ pipeline {
     agent any
 
     tools {
+        jdk 'JDK17'
         maven 'MAVEN3'
-        nodejs 'NODE18'
+        nodejs 'NODE20'
     }
 
     stages {
 
-        stage('Backend - Maven Build') {
+        stage('Checkout') {
             steps {
-                dir('backend') {
-                    sh 'mvn clean package -DskipTests'
-                }
+                git branch: 'main',
+                    url: 'https://github.com/Ma9nef/school-management-ci-cd.git'
             }
         }
 
-        stage('Frontend - Angular Build') {
+        stage('Build Frontend') {
             steps {
                 dir('frontend') {
                     sh 'npm install'
@@ -25,21 +25,24 @@ pipeline {
             }
         }
 
-        stage('Archive Artefacts') {
+        stage('Build Backend') {
+            steps {
+                dir('backend') {
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
                 archiveArtifacts artifacts: 'frontend/dist/**/*', fingerprint: true
             }
         }
-
     }
 
     post {
-        success {
-            echo "🎉 Build complet avec succès !"
-        }
-        failure {
-            echo "❌ Le build a échoué."
-        }
+        success { echo "🚀 Build successful !" }
+        failure { echo "❌ Build failed" }
     }
 }
