@@ -1,0 +1,124 @@
+<div class="container mt-5">
+
+  <h2 class="text-center mb-4">Gestion des Étudiants</h2>
+
+  <!-- 🔹 Formulaire d'ajout / modification -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+      <form (ngSubmit)="addStudent()" class="row g-3 align-items-center">
+
+        <!-- Nom -->
+        <div class="col-md-3">
+          <input
+            type="text"
+            [(ngModel)]="newStudent.name"
+            name="name"
+            class="form-control"
+            placeholder="Nom"
+            required
+          >
+        </div>
+
+        <!-- Prénom -->
+        <div class="col-md-3">
+          <input
+            type="text"
+            [(ngModel)]="newStudent.prenom"
+            name="prenom"
+            class="form-control"
+            placeholder="Prénom"
+            required
+          >
+        </div>
+
+        <!-- Âge -->
+        <div class="col-md-2">
+          <input
+            type="number"
+            [(ngModel)]="newStudent.age"
+            name="age"
+            class="form-control"
+            placeholder="Âge"
+            required
+          >
+        </div>
+
+        <!-- Classe dropdown -->
+        <div class="col-md-3">
+          <select
+            [(ngModel)]="newStudent.classe"
+            name="classe"
+            class="form-select"
+          >
+            <option [ngValue]="null" disabled selected>Choisir une classe</option>
+            <option *ngFor="let c of classes" [ngValue]="c">
+              {{ c.nom }} ({{ c.niveau }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Bouton ajouter / modifier -->
+        <div class="col-md-1 d-grid">
+          <button type="submit" class="btn btn-success">
+            {{ editingStudent ? '✔️' : '➕' }}
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Bouton annuler -->
+      <div *ngIf="editingStudent" class="mt-3 text-center">
+        <button class="btn btn-outline-secondary btn-sm" (click)="cancelEdit()">
+          Annuler la modification
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 🔹 Tableau des étudiants -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <table class="table table-hover text-center align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Âge</th>
+            <th>Classe</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let s of students">
+            <td>{{ s.name }}</td>
+            <td>{{ s.prenom }}</td>
+            <td>{{ s.age }}</td>
+            <td>{{ s.classe?.nom || '—' }}</td>
+
+            <td>
+              <button class="btn btn-outline-primary btn-sm me-2" (click)="editStudent(s)">
+                ✏️
+              </button>
+
+              <button class="btn btn-outline-danger btn-sm" (click)="deleteStudent(s.id!)">
+                🗑️
+              </button>
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+      <div *ngIf="students.length === 0" class="text-center text-muted">
+        Aucun étudiant trouvé.
+      </div>
+
+    </div>
+  </div>
+
+</div>
