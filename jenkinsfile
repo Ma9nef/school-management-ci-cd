@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'MAVEN3'
+        nodejs 'NODE18'
+    }
+
+    stages {
+
+        stage('Backend - Maven Build') {
+            steps {
+                dir('backend') {
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Frontend - Angular Build') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'ng build --configuration production'
+                }
+            }
+        }
+
+        stage('Archive Artefacts') {
+            steps {
+                archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'frontend/dist/**/*', fingerprint: true
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo "🎉 Build complet avec succès !"
+        }
+        failure {
+            echo "❌ Le build a échoué."
+        }
+    }
+}
