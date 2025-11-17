@@ -4,7 +4,7 @@ pipeline {
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
-        nodejs 'NODE18'
+        nodejs 'NODE22'   // <-- nouveau tool Node
     }
 
     stages {
@@ -19,6 +19,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
+                    sh 'node -v'          // DEBUG: vérifie la version
+                    sh 'npm -v'
                     sh 'npm install'
                     sh 'ng build --configuration production'
                 }
