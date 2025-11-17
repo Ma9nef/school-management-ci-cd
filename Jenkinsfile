@@ -4,7 +4,7 @@ pipeline {
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
-        nodejs 'NODE22'   // <-- nouveau tool Node
+        nodejs 'NODE18'   // <-- nouveau tool Node
     }
 
     stages {
